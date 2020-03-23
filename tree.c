@@ -13,6 +13,7 @@ typedef struct Node
 // Functions needed
 void startTree(Node **node);
 void addValue(int value, Node** node);
+int searchValue(int value, Node** node);
 Node* newNode(int value);
 
 // Main function
@@ -26,6 +27,12 @@ int main()
     printf("%d\n", tree->value);
     printf("%d\n", tree->left->value);
     printf("%d\n", tree->right->value);
+
+    putchar('\n');
+    
+    printf("%d\n", searchValue(6, &tree));
+    printf("%d\n", searchValue(8, &tree));
+    printf("%d\n", searchValue(19, &tree));
     return 0;
 }
 
@@ -35,7 +42,7 @@ void startTree(Node **node)
     *node = NULL;
 }
 
-void addValue(int value, Node** node)
+void addValue(int value, Node **node)
 {
     if (*node == NULL)
         *node = newNode(value);
@@ -45,13 +52,23 @@ void addValue(int value, Node** node)
             addValue(value, &(*node)->right);
         else
             addValue(value, &(*node)->left);
-    }
-    
+    }   
+}
+
+int searchValue(int search, Node **node)
+{
+    if (*node == NULL)
+        return 0;
+    if ((*node)->value == search)
+        return 1;
+    if ((*node)->value > search)
+        return searchValue(search, &(*node)->left);
+    return searchValue(search, &(*node)->right);
 }
 
 Node* newNode(int value)
 {
-    Node* output =(Node*) malloc(sizeof(Node));
+    Node* output = (Node*) malloc(sizeof(Node));
     output->value = value;
     output->left = NULL;
     output->right = NULL;
