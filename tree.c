@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 // Struct needed
 typedef struct Node
@@ -14,12 +15,14 @@ typedef struct Node
 // Functions needed
 void startTree(Node **node);
 void addValue(int value, Node** node);
-int isBinarySearchTree(Node **node, int min, int max);
-int searchValue(int value, Node** node);
-int depth(Node **node);
-void inOrder(Node **node);
-void preOrder(Node **node);
-void posOrder(Node **node);
+int isBinarySearchTree(Node *node, int min, int max);
+int searchValue(int value, Node* node);
+int depth(Node *node);
+void inOrder(Node *node);
+void preOrder(Node *node);
+void posOrder(Node *node);
+void pathFinder(Node *node, int path[], int depth);
+void pathPrinter(int path[], int depth);
 Node* newNode(int value);
 
 // Main function
@@ -38,24 +41,29 @@ int main()
 
     putchar('\n');
 
-    if (isBinarySearchTree(&tree, INT_MIN, INT_MAX))
+    if (isBinarySearchTree(tree, INT_MIN, INT_MAX))
         puts("true\n");
     else
         puts("false\n\n");
 
-    printf("%d\n", searchValue(6, &tree));
-    printf("%d\n", searchValue(8, &tree));
-    printf("%d\n", searchValue(19, &tree));
+    printf("%d\n", searchValue(6, tree));
+    printf("%d\n", searchValue(8, tree));
+    printf("%d\n", searchValue(19, tree));
 
     putchar('\n');
 
-    printf("%d\n", depth(&tree));
+    printf("%d\n", depth(tree));
 
     putchar('\n');
 
-    inOrder(&tree);    puts("\n");
-    preOrder(&tree);   puts("\n");
-    posOrder(&tree);   puts("\n");
+    inOrder(tree);    puts("\n");
+    preOrder(tree);   puts("\n");
+    posOrder(tree);   puts("\n");
+
+    putchar('\n');
+
+    int path[999];
+    pathFinder(tree, path, 0);
 
     return 0;
 }
@@ -79,76 +87,99 @@ void addValue(int value, Node **node)
     }   
 }
 
-int isBinarySearchTree(Node **node, int min, int max)
+int isBinarySearchTree(Node *node, int min, int max)
 {
-    if (*node == NULL)
+    if (node == NULL)
         return 1;
-    if ((*node)->value <= min || (*node)->value > max)
+    if (node->value <= min || node->value > max)
         return 0;
-    return isBinarySearchTree(&(*node)->left, min, (*node)->value) && isBinarySearchTree(&(*node)->right, (*node)->value, max);
+    return isBinarySearchTree(node->left, min, node->value) && isBinarySearchTree(node->right, node->value, max);
 }
 
-int searchValue(int search, Node **node)
+int searchValue(int search, Node *node)
 {
-    if (*node == NULL)
+    if (node == NULL)
         return 0;
     else 
     {
-        if ((*node)->value == search)
+        if (node->value == search)
             return 1;
-        if ((*node)->value > search)
-            return searchValue(search, &(*node)->left);
-        return searchValue(search, &(*node)->right);
+        if (node->value > search)
+            return searchValue(search, node->left);
+        return searchValue(search, node->right);
     }
 }
 
-int depth(Node **node)
+int depth(Node *node)
 {
-    if (*node == NULL)
+    if (node == NULL)
         return -1;
-    else
-    {
-        int leftDepth = depth(&(*node)->left);
-        int rightDepth = depth(&(*node)->right);
+    int leftDepth = depth(node->left);
+    int rightDepth = depth(node->right);
 
-        if (leftDepth > rightDepth)
-            return leftDepth + 1;
-        else
-            return rightDepth + 1;
-    }
+    if (leftDepth > rightDepth)
+        return leftDepth + 1;
+    else
+        return rightDepth + 1;
 }
 
 // left - root - right
-void inOrder(Node **node)
+void inOrder(Node *node)
 {
-    if (*node != NULL)
+    if (node != NULL)
     {
-        inOrder(&(*node)->left);
-        printf("%d ", (*node)->value);
-        inOrder(&(*node)->right); 
+        inOrder(node->left);
+        printf("%d ", node->value);
+        inOrder(node->right); 
     }
 }
 
 // root - left - right
-void preOrder(Node **node)
+void preOrder(Node *node)
 {
-    if (*node != NULL)
+    if (node != NULL)
     {
-        printf("%d ", (*node)->value);
-        preOrder(&(*node)->left);
-        preOrder(&(*node)->right); 
+        printf("%d ", node->value);
+        preOrder(node->left);
+        preOrder(node->right); 
     }
 }
 
 // left - right - root
-void posOrder(Node **node)
+void posOrder(Node *node)
 {
-    if (*node != NULL)
+    if (node != NULL)
     {
-        posOrder(&(*node)->left);
-        posOrder(&(*node)->right); 
-        printf("%d ", (*node)->value);
+        posOrder(node->left);
+        posOrder(node->right); 
+        printf("%d ", node->value);
     }
+}
+
+
+void pathFinder(Node *node, int path[], int depth)
+{
+    if (node == NULL)
+        return;
+    
+    path[depth] = node->value;
+    depth++;
+
+    if (node->left == NULL & node->right == NULL)
+        pathPrinter(path, depth);
+    else
+    {
+        pathFinder(node->left, path, depth);
+        pathFinder(node->right, path, depth);
+    }
+}
+
+void pathPrinter(int path[], int depth)
+{
+    int currentNode = 0;
+    for (; currentNode < depth - 1; currentNode++)
+        printf("%d --> ", path[currentNode]);
+    printf("%d\n", path[currentNode]);
 }
 
 Node* newNode(int value)
