@@ -8,7 +8,7 @@
 
 - [x] Criação de árvore binária.
 - [ ] **[Heitor]** Recepção de árvores já existentes.
-- [ ] **[Thaís]** Função **profundidade** que lê a árvore e retorna sua profundidade.
+- [x] **[Thaís]** Função **profundidade** que lê a árvore e retorna sua profundidade.
 - [ ] **[Heitor]** Funções de percurso "*in-order*", "*pre-order*" e "*pos-order*" para a árvore.
 - [ ] **[Thaís]** Função **caminho**, que lê a árvore e retorna como resultado uma lista com todos os caminhos até as folhas das árvores.
 - [ ] **[Thaís]** Função para testar se dada árvore é uma "*árvore binária de procura*" (está ordenada).

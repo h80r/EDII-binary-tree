@@ -14,6 +14,7 @@ typedef struct Node
 void startTree(Node **node);
 void addValue(int value, Node** node);
 int searchValue(int value, Node** node);
+int depth(Node **node);
 Node* newNode(int value);
 
 // Main function
@@ -24,8 +25,10 @@ int main()
     addValue(8, &tree);
     addValue(6, &tree);
     addValue(10, &tree);
+    addValue(5, &tree);
     printf("%d\n", tree->value);
     printf("%d\n", tree->left->value);
+    printf("%d\n", tree->left->left->value);
     printf("%d\n", tree->right->value);
 
     putchar('\n');
@@ -33,6 +36,11 @@ int main()
     printf("%d\n", searchValue(6, &tree));
     printf("%d\n", searchValue(8, &tree));
     printf("%d\n", searchValue(19, &tree));
+
+    putchar('\n');
+
+    printf("%d\n", depth(&tree));
+
     return 0;
 }
 
@@ -59,11 +67,30 @@ int searchValue(int search, Node **node)
 {
     if (*node == NULL)
         return 0;
-    if ((*node)->value == search)
-        return 1;
-    if ((*node)->value > search)
-        return searchValue(search, &(*node)->left);
-    return searchValue(search, &(*node)->right);
+    else 
+    {
+        if ((*node)->value == search)
+            return 1;
+        if ((*node)->value > search)
+            return searchValue(search, &(*node)->left);
+        return searchValue(search, &(*node)->right);
+    }
+}
+
+int depth(Node **node)
+{
+    if (*node == NULL)
+        return -1;
+    else
+    {
+        int leftDepth = depth(&(*node)->left);
+        int rightDepth = depth(&(*node)->right);
+
+        if (leftDepth > rightDepth)
+            return leftDepth + 1;
+        else
+            return rightDepth + 1;
+    }
 }
 
 Node* newNode(int value)
