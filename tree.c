@@ -107,15 +107,15 @@ void createHelper(Node **node, int doNewNode)
         return;
 
     int value;
-    printf("Por favor, insira o valor do nó.");
+    printf("Por favor, insira o valor do nó: ");
     scanf("%d", &value);
     *node = newNode(value);
     
     int option;
-    printf("Você deseja criar um filho à esquerda?\n1 - sim || 0 - não\n");
+    printf("Você deseja criar um filho à esquerda do nó atual?\n(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
     scanf("%d", &option);
     createHelper(&(*node)->left, option);
-    printf("Você deseja criar um filho à direita?\n1 - sim || 0 - não\n");
+    printf("Você deseja criar um filho à direita do nó atual?\n(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
     scanf("%d", &option);
     createHelper(&(*node)->right, option);
 }
