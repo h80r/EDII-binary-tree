@@ -30,42 +30,118 @@ Node* newNode(int value);
 // Main function
 int main()
 {
-    Node* tree = createTree();
-    //startTree(&tree);
-    //addValue(8, &tree);
-    //addValue(6, &tree);
-    //addValue(10, &tree);
-    //addValue(5, &tree);
-    printf("%d\n", tree->value);
-    printf("%d\n", tree->left->value);
-    printf("%d\n", tree->left->left->value);
-    printf("%d\n", tree->right->value);
+    Node* tree;
+    int creationChoice, menuOption, keepAdding;
 
-    putchar('\n');
+    printf("Bem vindo ao programa de árvores binárias.\n\n");
+    printf("1 - Criar árvore de busca do zero.\n");
+    printf("2 - Criar árvore manualmente\n");
+    printf("3 - Carregar árvore de exemplo\n");
+    printf("Por favor, selecione uma das opções acima: ");
+    scanf("%d", &creationChoice);
+    
+    switch (creationChoice)
+    {
+        case 1:
+            startTree(&tree);
+            do
+            {
+                int value;
 
-    if (isBinarySearchTree(tree, INT_MIN, INT_MAX))
-        puts("true\n");
-    else
-        puts("false\n\n");
+                printf("\nPor favor, insira o valor a ser adicionado: ");
+                scanf("%d", &value);
+                addValue(value, &tree);
 
-    printf("%d\n", searchValue(6, tree));
-    printf("%d\n", searchValue(8, tree));
-    printf("%d\n", searchValue(19, tree));
+                printf("\nVocê deseja inserir outro valor?\n");
+                printf("Digite 1 para Sim ou 0 para Não: ");
+                scanf("%d", &keepAdding);
+            } while (keepAdding == 1);
+            break;
+        case 2:
+            tree = createTree();
+            break;
+        default:
+            startTree(&tree);
+            addValue(8, &tree);
+            addValue(6, &tree);
+            addValue(10, &tree);
+            addValue(5, &tree);
+            printf("\nA árvore de exemplo a seguir foi carregada.\n");
+            printf("\t    8\n");
+            printf("\t   / \\\n");
+            printf("\t  6   10\n");
+            printf("\t /\n");
+            printf("\t5\n");
+            break;
+    }
 
-    putchar('\n');
+    do
+    {
+        int path[999];
 
-    printf("%d\n", depth(tree));
+        printf("\n[MENU DE AÇÕES]\n");
+        printf("1 - Exibir a profundidade da árvore\n");
+        printf("2 - Exibir o percurso \"in-order\"\n");
+        printf("3 - Exibir o percurso \"pre-order\"\n");
+        printf("4 - Exibir o percurso \"pos-order\"\n");
+        printf("5 - Exibir o caminho até todas as folhas\n");
+        printf("6 - Testar árvore\n");
+        printf("7 - Inserir elemento\n");
+        printf("0 - Encerrar o programa\n");
+        printf("Por favor, digite uma das opções acima: ");
+        scanf("%d", &menuOption);
+        printf("\n");
 
-    putchar('\n');
-
-    inOrder(tree);    puts("\n");
-    preOrder(tree);   puts("\n");
-    posOrder(tree);   puts("\n");
-
-    putchar('\n');
-
-    int path[999];
-    pathFinder(tree, path, 0);
+        switch (menuOption)
+        {
+            case 0:
+                printf("O programa será encerrado.\n");
+                break;
+            case 1:
+                printf("A árvore atualmente tem profundidade %d\n", depth(tree));
+                break;
+            case 2:
+                printf("Percurso \"in-order\":\n");
+                printf("\t");
+                inOrder(tree);
+                printf("\n");
+                break;
+            case 3:
+                printf("Percurso \"pre-order\":\n");
+                printf("\t");
+                preOrder(tree);
+                printf("\n");
+                break;
+            case 4:
+                printf("Percurso \"pos-order\":\n");
+                printf("\t");
+                posOrder(tree);
+                printf("\n");
+                break;
+            case 5:
+                printf("Estes são os caminhos existentes:\n");
+                pathFinder(tree, path, 0);
+                break;
+            case 6:
+                printf(isBinarySearchTree(tree, INT_MIN, INT_MAX) ? "A árvore atual é uma árvore de busca.\n" : "A árvore atual não é uma árvore de busca.\n");
+                break;
+            case 7:
+                if (isBinarySearchTree(tree, INT_MIN, INT_MAX))
+                {
+                    int value;
+                    
+                    printf("Qual o valor a ser adicionado?\n");
+                    scanf("%d", &value);
+                    addValue(value, &tree);
+                }
+                else
+                    printf("A árvore atual não é de busca, por isso é impossível inserir.\n");
+                break;
+            default:
+                printf("Não foi inserida uma opção válida.\n");
+                break;
+        }
+    } while (menuOption != 0);
 
     return 0;
 }
@@ -94,7 +170,7 @@ Node* createTree()
     Node* tree;
     startTree(&tree);
 
-    printf("Primeiro crie o nó inicial:\n");
+    printf("\nPrimeiro crie o nó inicial:");
     
     createHelper(&tree, 1);
 
@@ -103,19 +179,21 @@ Node* createTree()
 
 void createHelper(Node **node, int doNewNode)
 {
+    int value, option;
     if (doNewNode != 1)
         return;
 
-    int value;
-    printf("Por favor, insira o valor do nó: ");
+    printf("\nPor favor, insira o valor do nó: ");
     scanf("%d", &value);
     *node = newNode(value);
-    
-    int option;
-    printf("Você deseja criar um filho à esquerda do nó atual?\n(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
+
+    printf("\nVocê deseja criar um filho à esquerda do nó atual?\n");
+    printf("(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
     scanf("%d", &option);
     createHelper(&(*node)->left, option);
-    printf("Você deseja criar um filho à direita do nó atual?\n(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
+
+    printf("\nVocê deseja criar um filho à direita do nó atual?\n");
+    printf("(Valor do nó atual: %d)\n1 - sim || 0 - não\n", (*node)->value);
     scanf("%d", &option);
     createHelper(&(*node)->right, option);
 }
@@ -156,7 +234,6 @@ int depth(Node *node)
         return rightDepth + 1;
 }
 
-// left - root - right
 void inOrder(Node *node)
 {
     if (node != NULL)
@@ -167,7 +244,6 @@ void inOrder(Node *node)
     }
 }
 
-// root - left - right
 void preOrder(Node *node)
 {
     if (node != NULL)
@@ -178,7 +254,6 @@ void preOrder(Node *node)
     }
 }
 
-// left - right - root
 void posOrder(Node *node)
 {
     if (node != NULL)
