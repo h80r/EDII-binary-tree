@@ -15,6 +15,8 @@ typedef struct Node
 // Functions needed
 void startTree(Node **node);
 void addValue(int value, Node** node);
+Node* createTree();
+void createHelper(Node **node, int doNewNode);
 int isBinarySearchTree(Node *node, int min, int max);
 int searchValue(int value, Node* node);
 int depth(Node *node);
@@ -28,12 +30,12 @@ Node* newNode(int value);
 // Main function
 int main()
 {
-    Node* tree;
-    startTree(&tree);
-    addValue(8, &tree);
-    addValue(6, &tree);
-    addValue(10, &tree);
-    addValue(5, &tree);
+    Node* tree = createTree();
+    //startTree(&tree);
+    //addValue(8, &tree);
+    //addValue(6, &tree);
+    //addValue(10, &tree);
+    //addValue(5, &tree);
     printf("%d\n", tree->value);
     printf("%d\n", tree->left->value);
     printf("%d\n", tree->left->left->value);
@@ -85,6 +87,37 @@ void addValue(int value, Node **node)
         else
             addValue(value, &(*node)->left);
     }   
+}
+
+Node* createTree()
+{
+    Node* tree;
+    startTree(&tree);
+
+    printf("Primeiro crie o nó inicial:\n");
+    
+    createHelper(&tree, 1);
+
+    return tree;
+}
+
+void createHelper(Node **node, int doNewNode)
+{
+    if (doNewNode != 1)
+        return;
+
+    int value;
+    printf("Por favor, insira o valor do nó.");
+    scanf("%d", &value);
+    *node = newNode(value);
+    
+    int option;
+    printf("Você deseja criar um filho à esquerda?\n1 - sim || 0 - não\n");
+    scanf("%d", &option);
+    createHelper(&(*node)->left, option);
+    printf("Você deseja criar um filho à direita?\n1 - sim || 0 - não\n");
+    scanf("%d", &option);
+    createHelper(&(*node)->right, option);
 }
 
 int isBinarySearchTree(Node *node, int min, int max)
